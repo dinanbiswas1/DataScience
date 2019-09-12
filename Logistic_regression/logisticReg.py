@@ -3,12 +3,12 @@
 import xml.etree.cElementTree as ET
 import pandas as pd
 
-
+##list to hold the xml parsing data
 utter_id_lt = []
 utter_lng_lt = []
-
 train_utter_id = []
 train_utter_lng = []
+
 with open("AnnotationTraining.xml",encoding="utf8") as fp:
     data = fp.read().replace("&","|")
     Annot = ET.fromstring(data)
@@ -18,6 +18,7 @@ with open("AnnotationTraining.xml",encoding="utf8") as fp:
         utter_lng = utterance.text.strip()
         utter_id_lt.append(utter_id)
         utter_lng_lt.append(utter_lng)
+## IN line no 960 replace < with "|" (this should be done manually) 
 with open("InputTraining.xml",encoding="utf8") as fp:
     data = fp.read().replace("&","|")
     inputTrain = ET.fromstring(data)
@@ -27,6 +28,8 @@ with open("InputTraining.xml",encoding="utf8") as fp:
         utter_lng = utterance.text.strip()
         train_utter_id.append(utter_id)
         train_utter_lng.append(utter_lng)
+
+##creating dataframe
 names = ["an_id", "an_txt", "tr_id","tr_txt"]
 final_df = pd.DataFrame(columns=names)
 final_df["an_id"] = utter_id_lt
@@ -42,7 +45,7 @@ check_cnt = final_df[final_df["an_word_cnt"] != final_df["tr_word_cnt"]]
 
 from sklearn.linear_model import LogisticRegression
 logisticRegr = LogisticRegression()
-logisticRegr.fit(final_df["tr_txt"], final_df["an_txt"])
+logisticRegr.fit(final_df["tr_txt"], final_df["an_txt"])  ##not worked
 
 
 
